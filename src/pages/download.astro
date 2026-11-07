@@ -1,0 +1,145 @@
+---
+import Base from '../layouts/Base.astro'
+import { APP_URL, formatDate, formatSize, href, latestAndroid as apk, PLAY_URL } from '../lib/site'
+
+const RELEASES_URL = 'https://github.com/al-writer/mbt-site/releases'
+const arrow = '<path d="M12 4v12m0 0 5-5m-5 5-5-5M5 20h14" />'
+const num = (n: number, cls = '') =>
+  `<span class="grid size-8 shrink-0 place-items-center rounded-full bg-emerald-500/15 text-sm font-semibold text-emerald-300 ${cls}">${n}</span>`
+---
+
+<Base
+  title="Скачать — MBT: My Budget Tracker"
+  description="Скачать MBT для Android (APK) или открыть веб-версию для iPhone и компьютера. Бесплатно, без регистрации и рекламы."
+  path="download/"
+>
+  <main id="main">
+    <div class="relative overflow-hidden pt-28 pb-12 sm:pt-36">
+      <div aria-hidden="true" class="bg-grid pointer-events-none absolute inset-0"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute -top-48 left-1/2 h-96 w-[48rem] -translate-x-1/2 rounded-full bg-emerald-500/15 blur-[120px]"></div>
+      <div class="relative mx-auto max-w-6xl px-4 sm:px-6">
+        <p class="text-sm font-medium text-emerald-400">Скачать</p>
+        <h1 class="mt-3 max-w-3xl text-4xl font-semibold tracking-tight text-balance sm:text-5xl">MBT на вашем устройстве</h1>
+        <p class="mt-5 max-w-2xl text-lg text-fg-muted text-pretty">
+          Бесплатно, без регистрации и рекламы. Экраны, расчёты и файл резервной копии во всех версиях одинаковые.
+        </p>
+      </div>
+    </div>
+
+    <div class="mx-auto grid max-w-6xl gap-4 px-4 pb-16 sm:px-6 lg:grid-cols-[1.15fr_0.85fr]">
+      <!-- Android -->
+      <section id="android" aria-labelledby="android-title" class="card scroll-mt-24 p-7 sm:p-9">
+        <div class="flex items-center gap-3">
+          <div class="grid size-11 place-items-center rounded-xl bg-emerald-500/15 text-emerald-300">
+            <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" /><path d="M12 18h.01" /></svg>
+          </div>
+          <h2 id="android-title" class="text-2xl font-semibold">Android</h2>
+        </div>
+        <p class="mt-4 text-fg-muted">Нативное приложение. Android 14 и новее.</p>
+
+        {
+          apk ? (
+            <>
+              <a
+                href={apk.apkUrl}
+                class="group mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-emerald-500 px-7 font-medium text-zinc-950 shadow-[0_0_40px_-8px] shadow-emerald-500/60 transition hover:bg-emerald-400 sm:w-auto"
+              >
+                <svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={arrow} />
+                Скачать APK
+              </a>
+              <dl class="mt-5 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5 text-sm">
+                <dt class="text-fg-muted">Версия</dt>
+                <dd class="tabular-nums">
+                  {apk.versionName} от {formatDate(apk.date)} · <a href={href(`changes/#android-${apk.versionName}`)} class="text-emerald-300 underline underline-offset-4">что нового</a>
+                </dd>
+                <dt class="text-fg-muted">Размер</dt>
+                <dd class="tabular-nums">{formatSize(apk.apkSize)}</dd>
+                {apk.sha256 && (
+                  <>
+                    <dt class="text-fg-muted">SHA-256</dt>
+                    <dd class="flex min-w-0 items-center gap-2">
+                      <code class="truncate text-xs text-zinc-400">{apk.sha256}</code>
+                      <button type="button" data-copy={apk.sha256} class="shrink-0 rounded-full border border-white/10 px-2.5 py-0.5 text-xs text-zinc-300 transition hover:border-white/25">
+                        Скопировать
+                      </button>
+                    </dd>
+                  </>
+                )}
+              </dl>
+            </>
+          ) : (
+            <p class="mt-7 rounded-2xl border border-white/10 bg-white/5 p-4 text-zinc-300">
+              Первый выпуск APK готовится. Пока на Android можно пользоваться веб-версией: откройте её в Chrome и нажмите «Установить».
+            </p>
+          )
+        }
+
+        {
+          PLAY_URL ? (
+            <a href={PLAY_URL} class="mt-4 inline-flex h-11 items-center rounded-full border border-white/15 px-6 text-sm font-medium transition hover:border-white/30 hover:bg-white/5" rel="noopener">
+              Открыть в Google Play
+            </a>
+          ) : (
+            <p class="mt-4 text-sm text-fg-muted">Скоро — в Google Play.</p>
+          )
+        }
+
+        {
+          apk && (
+            <>
+              <h3 class="mt-9 text-lg font-semibold">Как установить APK</h3>
+              <ol class="mt-4 grid gap-4">
+                <li class="flex gap-4"><Fragment set:html={num(1)} /><p class="pt-1 text-zinc-300">Нажмите «Скачать APK» на телефоне. Если браузер спросит — подтвердите загрузку.</p></li>
+                <li class="flex gap-4"><Fragment set:html={num(2)} /><p class="pt-1 text-zinc-300">Откройте скачанный файл. В первый раз Android попросит разрешить браузеру <b class="text-zinc-100">установку неизвестных приложений</b> — разрешите.</p></li>
+                <li class="flex gap-4"><Fragment set:html={num(3)} /><p class="pt-1 text-zinc-300">Нажмите «Установить». Google Play Защита может предложить проверить приложение — это нормально для приложений не из магазина.</p></li>
+              </ol>
+              <p class="mt-6 text-sm text-fg-muted">
+                Новую версию ставьте так же, поверх старой: данные сохранятся. Прошлые версии — на
+                <a href={RELEASES_URL} class="text-emerald-300 underline underline-offset-4" rel="noopener">странице выпусков</a>.
+              </p>
+            </>
+          )
+        }
+      </section>
+
+      <!-- Веб и iPhone -->
+      <section id="web" aria-labelledby="web-title" class="card scroll-mt-24 p-7 sm:p-9">
+        <div class="flex items-center gap-3">
+          <div class="grid size-11 place-items-center rounded-xl bg-sky-500/15 text-sky-300">
+            <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+          </div>
+          <h2 id="web-title" class="text-2xl font-semibold">iPhone, iPad и компьютер</h2>
+        </div>
+        <p class="mt-4 text-fg-muted">Веб-версия: работает в браузере и без интернета, ставится на экран «Домой».</p>
+        <a
+          href={APP_URL}
+          class="mt-7 inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-white px-7 font-medium text-zinc-950 transition hover:bg-emerald-200 sm:w-auto"
+        >
+          Открыть приложение
+          <svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7" /></svg>
+        </a>
+        <ul class="mt-8 grid gap-4 text-zinc-300">
+          <li><b class="text-zinc-100">iPhone и iPad:</b> откройте в Safari → «Поделиться» → «На экран „Домой“».</li>
+          <li><b class="text-zinc-100">Компьютер:</b> в Chrome или Edge — значок установки в адресной строке.</li>
+        </ul>
+        <p class="mt-6 text-sm text-fg-muted">Обновляется сама: когда выходит новая версия, приложение предложит её включить.</p>
+      </section>
+    </div>
+
+    <!-- Перенос данных -->
+    <section aria-labelledby="move-title" class="mx-auto max-w-6xl px-4 pb-24 sm:px-6">
+      <div class="card p-7 sm:p-9">
+        <h2 id="move-title" class="text-2xl font-semibold">Перенос данных между устройствами</h2>
+        <p class="mt-3 max-w-3xl text-fg-muted">
+          Синхронизации нет — данные не покидают устройство. Перенести их можно файлом резервной копии: он общий для Android, веба и iPhone.
+        </p>
+        <ol class="mt-6 grid gap-4 md:grid-cols-3">
+          <li class="flex gap-4"><Fragment set:html={num(1)} /><p class="pt-1 text-zinc-300">На старом устройстве: «Настройки → Резервные копии → Скачать резервную копию JSON».</p></li>
+          <li class="flex gap-4"><Fragment set:html={num(2)} /><p class="pt-1 text-zinc-300">Передайте файл на новое устройство: облако, почта, мессенджер.</p></li>
+          <li class="flex gap-4"><Fragment set:html={num(3)} /><p class="pt-1 text-zinc-300">На новом: «Настройки → Резервные копии → Восстановить из файла».</p></li>
+        </ol>
+        <p class="mt-6 text-sm text-fg-muted">Подробнее — в <a href={href('docs/#backup')} class="text-emerald-300 underline underline-offset-4">инструкции</a>.</p>
+      </div>
+    </section>
+  </main>
+</Base>

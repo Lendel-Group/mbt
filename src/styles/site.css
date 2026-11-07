@@ -1,0 +1,354 @@
+@import 'tailwindcss';
+
+/* Цвета — как в приложении (PWA-Budget/src/index.css). Сайт только в тёмной теме, как лендинг PWA. */
+@theme {
+  --color-surface: #09090b;
+  --color-surface-2: #18181b;
+  --color-accent: #10b981;
+  --color-accent-fg: #34d399;
+  --color-fg-muted: #a1a1aa;
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-rise: rise 700ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+html {
+  color-scheme: dark;
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-surface);
+  color: #f4f4f5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Тонкая сетка на фоне первого экрана, растворяется к краям */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 100%);
+}
+
+.text-gradient {
+  background: linear-gradient(120deg, #6ee7b7 0%, #34d399 40%, #22d3ee 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Карточка с подсветкой рамки */
+.card {
+  position: relative;
+  border-radius: 1.5rem;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  background: linear-gradient(180deg, rgb(24 24 27 / 0.9), rgb(9 9 11 / 0.9));
+  transition: border-color 200ms, transform 200ms;
+}
+.card:hover {
+  border-color: rgb(52 211 153 / 0.35);
+}
+
+/* Появление секций при прокрутке (src/scripts/site.ts) */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+details > summary {
+  list-style: none;
+  cursor: pointer;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}
+details[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-fg);
+  outline-offset: 3px;
+  border-radius: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Инструкция: типографика статьи, скриншоты в «рамке телефона», шаги, врезки. */
+
+.doc h2 {
+  font-size: 1.875rem;
+  line-height: 1.15;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.doc h3 {
+  margin-top: 2.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.doc p,
+.doc li {
+  color: #d4d4d8;
+  line-height: 1.7;
+}
+.doc p + p {
+  margin-top: 0.75rem;
+}
+.doc .lead {
+  margin-top: 0.75rem;
+  font-size: 1.125rem;
+  color: var(--color-fg-muted);
+}
+.doc a:not(.btn) {
+  color: var(--color-accent-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.doc b,
+.doc strong {
+  color: #fafafa;
+  font-weight: 600;
+}
+
+/* Название кнопки или элемента интерфейса */
+.ui {
+  display: inline-block;
+  padding: 0 0.4em;
+  border-radius: 0.375rem;
+  border: 1px solid rgb(255 255 255 / 0.12);
+  background: rgb(255 255 255 / 0.06);
+  color: #fafafa;
+  font-size: 0.92em;
+  line-height: 1.6;
+  /* Длинные пути вроде «Настройки → Опасная зона → …» переносятся, рамка повторяется на каждой строке */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Нумерованные шаги */
+.steps {
+  margin-top: 1rem;
+  counter-reset: step;
+  display: grid;
+  gap: 0.75rem;
+}
+.steps > li {
+  position: relative;
+  padding-left: 2.5rem;
+  counter-increment: step;
+}
+.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 0.1rem;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+  background: rgb(16 185 129 / 0.15);
+  color: var(--color-accent-fg);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* Маркированный список */
+.bullets {
+  margin-top: 0.75rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.bullets > li {
+  position: relative;
+  padding-left: 1.25rem;
+}
+.bullets > li::before {
+  content: '';
+  position: absolute;
+  left: 0.25rem;
+  top: 0.7em;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  background: var(--color-accent-fg);
+}
+
+/* Врезки: совет и предупреждение */
+.callout {
+  margin-top: 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  border-radius: 1rem;
+  border: 1px solid rgb(52 211 153 / 0.25);
+  background: rgb(16 185 129 / 0.08);
+  padding: 1rem 1.125rem;
+}
+.callout p {
+  color: #e4e4e7;
+}
+.callout.warn {
+  border-color: rgb(251 191 36 / 0.3);
+  background: rgb(251 191 36 / 0.07);
+}
+.callout .icon {
+  flex-shrink: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+/* Скриншоты */
+.shots {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scroll-snap-type: x mandatory;
+}
+.shot {
+  flex: 0 0 15rem;
+  scroll-snap-align: start;
+}
+.shot button {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1.75rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: #000;
+  padding: 0.375rem;
+  box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.8);
+  cursor: zoom-in;
+  transition: border-color 200ms, transform 200ms;
+}
+.shot button:hover {
+  border-color: rgb(52 211 153 / 0.4);
+  transform: translateY(-2px);
+}
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 1.4rem;
+}
+.shot figcaption {
+  margin-top: 0.625rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-fg-muted);
+}
+
+/* Оглавление: активный пункт подсвечивается при прокрутке */
+.toc a {
+  display: block;
+  border-left: 2px solid transparent;
+  padding: 0.3rem 0 0.3rem 0.875rem;
+  color: var(--color-fg-muted);
+  font-size: 0.875rem;
+  transition: color 150ms, border-color 150ms;
+}
+.toc a:hover {
+  color: #fafafa;
+}
+.toc a[aria-current='true'] {
+  border-color: var(--color-accent-fg);
+  color: #fafafa;
+}
+
+/* Увеличенный скриншот */
+dialog.zoom {
+  margin: auto;
+  max-width: min(26rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+dialog.zoom::backdrop {
+  background: rgb(0 0 0 / 0.85);
+  backdrop-filter: blur(4px);
+}
+dialog.zoom img {
+  max-height: calc(100dvh - 2rem);
+  width: auto;
+  border-radius: 1.75rem;
+}
+
+/* Текст из Markdown (CHANGELOG, описания выпусков) */
+.prose-md h3 {
+  margin-top: 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-accent-fg);
+}
+.prose-md ul {
+  margin-top: 0.5rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.prose-md li {
+  position: relative;
+  padding-left: 1.25rem;
+  color: #d4d4d8;
+  line-height: 1.65;
+}
+.prose-md li::before {
+  content: '';
+  position: absolute;
+  left: 0.25rem;
+  top: 0.7em;
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.3);
+}
+.prose-md p {
+  margin-top: 0.5rem;
+  color: #d4d4d8;
+}
+.prose-md code {
+  font-size: 0.9em;
+  color: #e4e4e7;
+}
+.prose-md a {
+  color: var(--color-accent-fg);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
