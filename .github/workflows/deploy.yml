@@ -7,7 +7,10 @@ on:
   # Android CI публикует APK релизом в этот репозиторий (тег android-vX.Y.Z) — пересобрать сайт и version.json
   release:
     types: [published, edited, deleted]
-  # «Что нового» веб-версии берётся из CHANGELOG PWA-Budget
+  # Веб-версия (PWA) собирается из main Lendel-Group/PWA-Budget: его deploy присылает pwa-updated
+  repository_dispatch:
+    types: [pwa-updated]
+  # «Что нового» веб-версии берётся из CHANGELOG PWA-Budget; заодно подхватывает PWA, если событие не пришло
   schedule:
     - cron: '17 3 * * *'
   workflow_dispatch:
@@ -37,6 +40,13 @@ jobs:
       - run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # https://lendel.app/mbt/pwa/ — данные PWA (IndexedDB) привязаны к адресу, подкаталог не менять
+      - uses: actions/checkout@v4
+        with:
+          repository: Lendel-Group/PWA-Budget
+          ref: main
+          path: .pwa
+      - run: scripts/build-pwa.sh .pwa
       - uses: actions/upload-pages-artifact@v3
         if: github.event_name != 'pull_request'
         with:

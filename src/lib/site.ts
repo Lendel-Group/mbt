@@ -3,10 +3,10 @@ import releases from '../data/android-releases.json'
 /** Ссылка внутри сайта с учётом подпути GitHub Pages. */
 export const href = (path = '') => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${path}`
 
-/** PWA остаётся по старому адресу: данные IndexedDB привязаны к адресу сайта. */
-export const APP_URL = 'https://al-writer.github.io/PWA-Budget/app/'
-export const PWA_SOURCE_URL = 'https://github.com/al-writer/PWA-Budget'
-export const SPEC_URL = 'https://github.com/al-writer/budget-spec'
+/** Веб-версия (PWA) — подкаталог этого сайта: сборка Lendel-Group/PWA-Budget, см. .github/workflows/deploy.yml. */
+export const APP_URL = href('pwa/')
+export const PWA_SOURCE_URL = 'https://github.com/Lendel-Group/PWA-Budget'
+export const SPEC_URL = 'https://github.com/Lendel-Group/budget-spec'
 export const RATES_URL = 'https://al-writer.github.io/nbk-rates/'
 /** Пока приложения нет в Google Play — null. */
 export const PLAY_URL: string | null = null

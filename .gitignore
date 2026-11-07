@@ -5,3 +5,4 @@ dist/
 src/data/*.json
 src/data/*.md
 public/android/
+.pwa
