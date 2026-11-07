@@ -1,18 +1,18 @@
 // Данные для сборки: выпуски Android и CHANGELOG PWA.
-// Android-репозиторий закрыт, поэтому его CI публикует APK в релизы ЭТОГО репозитория (тег android-vX.Y.Z,
+// Android-репозиторий (Lendel-Group/android-budget) закрыт, поэтому его CI публикует APK в релизы ЭТОГО репозитория (тег android-vX.Y.Z,
 // описание релиза — раздел CHANGELOG этой версии). Отсюда берутся ссылка на APK, version.json и «Что нового».
 // Запускается перед `astro build`. Любая ошибка сети валит сборку — на GitHub Pages остаётся прошлая версия сайта.
 import { mkdir, writeFile } from 'node:fs/promises'
 
-const apiHeaders = { 'User-Agent': 'mbt-site-build', Accept: 'application/vnd.github+json' }
+const apiHeaders = { 'User-Agent': 'mbt-build', Accept: 'application/vnd.github+json' }
 if (process.env.GITHUB_TOKEN) apiHeaders.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`
 
-const REPO = process.env.GITHUB_REPOSITORY ?? 'al-writer/mbt-site'
-const PWA_CHANGELOG = 'https://raw.githubusercontent.com/al-writer/PWA-Budget/main/CHANGELOG.md'
+const REPO = process.env.GITHUB_REPOSITORY ?? 'Lendel-Group/mbt'
+const PWA_CHANGELOG = 'https://raw.githubusercontent.com/Lendel-Group/PWA-Budget/main/CHANGELOG.md'
 
 async function get(url) {
   // Токен — только для API: raw.githubusercontent.com с чужим токеном отвечает 404
-  const res = await fetch(url, { headers: url.startsWith('https://api.github.com/') ? apiHeaders : { 'User-Agent': 'mbt-site-build' } })
+  const res = await fetch(url, { headers: url.startsWith('https://api.github.com/') ? apiHeaders : { 'User-Agent': 'mbt-build' } })
   if (!res.ok) throw new Error(`${url}: HTTP ${res.status}`)
   return res
 }
