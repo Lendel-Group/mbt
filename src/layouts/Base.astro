@@ -1,0 +1,111 @@
+---
+import '../styles/site.css'
+import { APP_URL, NAV, PWA_SOURCE_URL, href } from '../lib/site'
+
+interface Props {
+  title: string
+  description: string
+  /** Путь страницы без базы: '', 'download/' … — для подсветки пункта меню и canonical. */
+  path: string
+}
+const { title, description, path } = Astro.props
+const canonical = new URL(href(path), Astro.site).href
+const arrow = '<path d="M5 12h14M13 5l7 7-7 7" />'
+---
+
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#09090b" />
+    <link rel="icon" type="image/svg+xml" href={href('favicon.svg')} />
+    <link rel="apple-touch-icon" href={href('apple-touch-icon.png')} />
+    <link rel="alternate" type="application/rss+xml" title="MBT: что нового" href={href('rss.xml')} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(href('pwa-512x512.png'), Astro.site).href} />
+  </head>
+  <body class="font-sans">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-zinc-900 focus:px-4 focus:py-2">
+      К содержимому
+    </a>
+
+    <header
+      data-header
+      class="fixed inset-x-0 top-0 z-40 border-b border-transparent transition-colors duration-300 data-[scrolled]:border-white/10 data-[scrolled]:bg-zinc-950/80 data-[scrolled]:backdrop-blur-xl"
+    >
+      <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        <a href={href()} class="flex items-center gap-2.5 font-semibold tracking-tight">
+          <img src={href('favicon.svg')} alt="" width="32" height="32" class="size-8 rounded-lg" />
+          <span>MBT</span>
+        </a>
+        <nav aria-label="Разделы" class="hidden items-center gap-7 text-sm lg:flex">
+          {
+            NAV.slice(1).map((n) => (
+              <a
+                href={href(n.path)}
+                aria-current={n.path === path ? 'page' : undefined}
+                class="text-fg-muted transition hover:text-white aria-[current=page]:text-white"
+              >
+                {n.label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="flex items-center gap-2">
+          <a
+            href={APP_URL}
+            class="inline-flex h-10 items-center gap-1.5 rounded-full bg-white px-4 text-sm font-medium text-zinc-950 transition hover:bg-emerald-200"
+          >
+            Открыть<span class="hidden sm:inline">приложение</span>
+            <svg aria-hidden="true" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={arrow} />
+          </a>
+          <!-- Меню на телефоне -->
+          <details data-menu class="relative lg:hidden">
+            <summary aria-label="Меню" class="grid size-10 place-items-center rounded-full border border-white/10 text-zinc-300 transition hover:border-white/25">
+              <svg aria-hidden="true" class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+            </summary>
+            <nav aria-label="Разделы" class="absolute right-0 mt-2 w-56 rounded-2xl border border-white/10 bg-zinc-900/95 p-2 shadow-2xl backdrop-blur-xl">
+              {
+                NAV.map((n) => (
+                  <a
+                    href={href(n.path)}
+                    aria-current={n.path === path ? 'page' : undefined}
+                    class="block rounded-xl px-3 py-2.5 text-sm text-zinc-300 transition hover:bg-white/5 aria-[current=page]:bg-white/10 aria-[current=page]:text-white"
+                  >
+                    {n.label}
+                  </a>
+                ))
+              }
+            </nav>
+          </details>
+        </div>
+      </div>
+    </header>
+
+    <slot />
+
+    <footer class="border-t border-white/5">
+      <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-fg-muted sm:px-6 md:flex-row">
+        <div class="flex items-center gap-2">
+          <img src={href('favicon.svg')} alt="" width="20" height="20" class="size-5 rounded" />
+          <span>MBT: My Budget Tracker · © 2026</span>
+        </div>
+        <nav aria-label="Ссылки" class="flex flex-wrap justify-center gap-x-6 gap-y-2">
+          {NAV.slice(1).map((n) => <a href={href(n.path)} class="transition hover:text-white">{n.label}</a>)}
+          <a href={href('rss.xml')} class="transition hover:text-white">RSS</a>
+          <a href={PWA_SOURCE_URL} class="transition hover:text-white" rel="noopener">Исходный код</a>
+        </nav>
+      </div>
+    </footer>
+
+    <script>
+      import '../scripts/site'
+    </script>
+  </body>
+</html>

@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.astro/
+# Собирается scripts/fetch-data.mjs перед сборкой
+src/data/*.json
+src/data/*.md
+public/android/
