@@ -19,6 +19,7 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: write # релиз → запуск этого же workflow на main
 
 concurrency:
   group: pages-${{ github.event_name == 'pull_request' && github.ref || 'deploy' }}
@@ -28,7 +29,18 @@ env:
   ASTRO_TELEMETRY_DISABLED: '1'
 
 jobs:
+  # Окружение github-pages публикует только из main, а событие релиза приходит на тег android-vX.Y.Z:
+  # такой запуск лишь перезапускает деплой на main (workflow_dispatch от GITHUB_TOKEN создаёт новый запуск).
+  redeploy:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run deploy.yml --repo "$GITHUB_REPOSITORY" --ref main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
+    if: github.event_name != 'release'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -53,7 +65,7 @@ jobs:
           path: dist
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && github.event_name != 'release'
     needs: build
     runs-on: ubuntu-latest
     environment:
