@@ -1,9 +1,9 @@
 ---
 import Base from '../layouts/Base.astro'
-import { href, PWA_SOURCE_URL, RATES_URL } from '../lib/site'
+import { href, RATES_URL, SUPPORT_EMAIL } from '../lib/site'
 
 // Текст — по budget-spec (spec/00 «Принципы», spec/06 «Политика конфиденциальности»). Меняя поведение сети, обновить и здесь.
-const UPDATED = '7 ноября 2026'
+const UPDATED = '8 ноября 2026'
 ---
 
 <Base
@@ -70,7 +70,8 @@ const UPDATED = '7 ноября 2026'
 
     <section class="mt-14">
       <h2>Изменения и вопросы</h2>
-      <p class="mt-4">Если политика изменится, новая версия появится на этой странице с новой датой, а изменение — в разделе <a href={href('changes/')}>«Что нового»</a>. Вопросы — в <a href={`${PWA_SOURCE_URL}/issues`} rel="noopener">обсуждениях на GitHub</a>.</p>
+      <p class="mt-4">Если политика изменится, новая версия появится на этой странице с новой датой, а изменение — в разделе <a href={href('changes/')}>«Что нового»</a>.</p>
+      <p class="mt-4">Разработчик — Lendel Group. Вопросы о конфиденциальности и приложении: <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>.</p>
     </section>
   </main>
 </Base>

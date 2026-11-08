@@ -1,6 +1,6 @@
 ---
 import '../styles/site.css'
-import { APP_URL, NAV, PWA_SOURCE_URL, href } from '../lib/site'
+import { APP_URL, NAV, PWA_SOURCE_URL, SUPPORT_EMAIL, href } from '../lib/site'
 
 interface Props {
   title: string
@@ -100,6 +100,7 @@ const arrow = '<path d="M5 12h14M13 5l7 7-7 7" />'
           {NAV.slice(1).map((n) => <a href={href(n.path)} class="transition hover:text-white">{n.label}</a>)}
           <a href={href('rss.xml')} class="transition hover:text-white">RSS</a>
           <a href={PWA_SOURCE_URL} class="transition hover:text-white" rel="noopener">Исходный код</a>
+          <a href={`mailto:${SUPPORT_EMAIL}`} class="transition hover:text-white">{SUPPORT_EMAIL}</a>
         </nav>
       </div>
     </footer>

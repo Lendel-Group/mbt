@@ -5,6 +5,8 @@ export const href = (path = '') => `${import.meta.env.BASE_URL.replace(/\/$/, ''
 
 /** Веб-версия (PWA) — подкаталог этого сайта: сборка Lendel-Group/PWA-Budget, см. .github/workflows/deploy.yml. */
 export const APP_URL = href('pwa/')
+/** Почта поддержки — та же, что в карточке Google Play. */
+export const SUPPORT_EMAIL = 'support@lendel.app'
 export const PWA_SOURCE_URL = 'https://github.com/Lendel-Group/PWA-Budget'
 export const SPEC_URL = 'https://github.com/Lendel-Group/budget-spec'
 export const RATES_URL = 'https://al-writer.github.io/nbk-rates/'
